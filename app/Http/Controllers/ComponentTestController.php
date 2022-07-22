@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ComponentTestController extends Controller
 {
     public function getJson(){
-        return response()->json(['name' => 'john']);
+        return response()->json(['name' => 'john2']);
     }
 
 }
