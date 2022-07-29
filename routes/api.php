@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ComponentTestController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,13 @@ use App\Http\Controllers\ComponentTestController;
 |
 */
 
-Route::get('sample', [ComponentTestController::class, 'getJson'])->name('sample');
+Route::middleware('throttle:100,1')->group(function () {
+    Route::post('login', [AuthController::class, 'login'])->name('API-LG-010');
+    Route::get('sample', [ComponentTestController::class, 'getJson'])->name('sample');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::middleware(['auth:sanctum', 'type.user', 'auth.permission'])->group(function () {
+        Route::delete('/logout', [AuthController::class, 'logout'])->name('API-LG-020');
+    });
 });
+
+Route::get('sample', [ComponentTestController::class, 'getJson'])->name('sample');

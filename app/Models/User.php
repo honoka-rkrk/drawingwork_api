@@ -18,9 +18,16 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'id',
+        'description',
+        'displayName',
+        'photoUrl',
+        'provider',
+        'providerUid',
+        'screenName',
+        'refresh_token',
+        'refresh_token_expired_at',
+        'last_logged_in_at',
     ];
 
     /**
@@ -29,16 +36,19 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'id',
+        'refresh_token',
     ];
 
     /**
-     * The attributes that should be cast.
+     * The attributes that should be mutated to dates.
      *
-     * @var array<string, string>
+     * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    protected $dates = [
+        'refresh_token_expired_at',
+        'last_logged_in_at',
+        'created_at',
+        'updated_at',
     ];
 }
