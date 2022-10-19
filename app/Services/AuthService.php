@@ -33,16 +33,16 @@ class AuthService implements AuthServiceInterface
         $userData = [];
         if ($request->grantType == config('const.grant_type.login')) {
             // login
-            if (empty($request->id)) {
+            if (empty($request->storeKey)) {
                 return [Response::HTTP_BAD_REQUEST, ['message' => [trans('auth.failed')]]];
             }
 
             // check status of user
-            $user = $this->userRepository->findById($request->id);
-            try{
+            $user = $this->userRepository->findByStoreKey($request->storeKey);
+            try {
                 if (empty($user)) {
                     $user = $this->userRepository->create([
-                        'id' => $request->id,
+                        'store_key' => $request->storeKey,
                         'description' => $request->description,
                         'photoUrl' => $request->photoUrl,
                         'provider' => $request->provider,
@@ -54,7 +54,7 @@ class AuthService implements AuthServiceInterface
                         'last_logged_in_at' => now(),
                     ]);
                 }
-            }catch (\Throwable $th) {
+            } catch (\Throwable $th) {
                 \Log::error($th);
                 return [Response::HTTP_INTERNAL_SERVER_ERROR, ['message' => [trans('auth.failed')]]];
             }
@@ -93,6 +93,7 @@ class AuthService implements AuthServiceInterface
             'accessToken' => $accessToken,
             'refreshToken' => $refreshToken,
             'loginId' => $user->id,
+            'user' => $user,
         ]];
     }
 
@@ -119,5 +120,4 @@ class AuthService implements AuthServiceInterface
         }
         return [Response::HTTP_NO_CONTENT, null];
     }
-
 }

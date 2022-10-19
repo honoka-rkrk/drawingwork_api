@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('store_key')->unique();
             $table->string('description')->nullable();
             $table->string('photoUrl');
             $table->string('provider');
